@@ -1,6 +1,10 @@
 package board
 
-import "testing"
+import (
+	"strconv"
+	"strings"
+	"testing"
+)
 
 var emptyBoard = Board{
 	BoardState: [9]Cell{
@@ -103,30 +107,130 @@ func TestWhenBoardHasNoEmptyCellsShouldReturnFalse(t *testing.T) {
 }
 
 func TestWhenThereIsWinnerShouldReturnTrue(t *testing.T) {
-	// //Given
-	// players := []rune{'O', 'X'}
-	// var boards map[string][2]Board
-	// var boardWinner123,	boardWinner147,	boardWinner159,	boardWinner258,	boardWinner357,	boardWinner369,	boardWinner456,	boardWinner789 Board
+	//Given
+	players := [...]rune{'O', 'X'}
+	var boards = make(map[string]map[rune]Board)
+	expectedResult := true
 
-	// for index, player := range players {
-	// 	boards['123'][index] = Board{
-	// 		{
-	// 			BoardState: [9]Cell{
-	// 				{Value: player},
-	// 				{Value: player},
-	// 				{Value: player},
-	// 				{Value: 'X'},
-	// 				{Value: player},
-	// 				{Value: 'X'},
-	// 				{Value: player},
-	// 				{Value: 'X'},
-	// 				{Value: 'X'},
-	// 			}
-	// 		},
+	for index, player := range players {
+		var nextPlayer rune
+		if index == 0 {
+			nextPlayer = players[1]
+		} else {
+			nextPlayer = players[0]
+		}
+		boards["123"] = make(map[rune]Board)
+		boards["123"][player] = Board{
+			BoardState: [9]Cell{
+				{Value: player},
+				{Value: player},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: nextPlayer}}}
+		boards["147"] = make(map[rune]Board)
+		boards["147"][player] = Board{
+			BoardState: [9]Cell{
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player}}}
+		boards["159"] = make(map[rune]Board)
+		boards["159"][player] = Board{
+			BoardState: [9]Cell{
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: player}}}
+		boards["258"] = make(map[rune]Board)
+		boards["258"][player] = Board{
+			BoardState: [9]Cell{
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: player}}}
+		boards["357"] = make(map[rune]Board)
+		boards["357"][player] = Board{
+			BoardState: [9]Cell{
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: nextPlayer}}}
+		boards["369"] = make(map[rune]Board)
+		boards["369"][player] = Board{
+			BoardState: [9]Cell{
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: player}}}
+		boards["456"] = make(map[rune]Board)
+		boards["456"][player] = Board{
+			BoardState: [9]Cell{
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: player},
+				{Value: player},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: nextPlayer}}}
+		boards["789"] = make(map[rune]Board)
+		boards["789"][player] = Board{
+			BoardState: [9]Cell{
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: player},
+				{Value: nextPlayer},
+				{Value: nextPlayer},
+				{Value: player},
+				{Value: player},
+				{Value: player}}}
+		
+	}
 
-	// 	}
-	// }
-
+	//Test + Verify
+	for key, playerBoards := range boards {
+		indexes := strings.Split(key, "")
+		for player, board := range playerBoards {
+			for _, index := range indexes {
+				i, _ := strconv.Atoi(index)
+				result := board.HasWinner(i-1, player)
+				if result != expectedResult {
+					t.Errorf("Expecting winner '%c' with sequence %s", player, key)
+				}
+			}
+		}
+	}
 }
 
 func TestWhenSettingEmptyCellShouldReturnTrue(t *testing.T) {
