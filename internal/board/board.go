@@ -4,149 +4,56 @@ import (
 	"fmt"
 )
 
-type boardFunctions interface {
-	PrintBoard()
-	printHeaderFooter()
-	printFiller()
-	printCell(index int) string
-	SetCellValue(index int, value rune) bool
-	HasWinner(index int, player rune) bool
-	HasEmptyCells() bool
-}
-
 type Board struct {
-	BoardState [9]Cell
+	State [9]Cell
 }
 
-func (board *Board) SetCellValue(index int, value rune) bool {
-	return board.BoardState[index].setValue(value)
-}
-
-func (board *Board) HasWinner(index int, player rune) bool {
-	state := board.BoardState
-	switch index {
-	case 0: //Top left
-		//123
-		if state[1].getValue() == player && state[2].getValue() == player {
-			return true
-		}
-		//147
-		if state[3].getValue() == player && state[6].getValue() == player {
-			return true
-		}
-		//159
-		if state[4].getValue() == player && state[8].getValue() == player {
-			return true
-		}
-		return false
-	case 1: //Top middle
-		//123
-		if state[0].getValue() == player && state[2].getValue() == player {
-			return true
-		}
-		//258
-		if state[4].getValue() == player && state[7].getValue() == player {
-			return true
-		}
-		return false
-	case 2: // Top right
-		//123
-		if state[0].getValue() == player && state[1].getValue() == player {
-			return true
-		}
-		//369
-		if state[5].getValue() == player && state[8].getValue() == player {
-			return true
-		}
-		//357
-		if state[4].getValue() == player && state[6].getValue() == player {
-			return true
-		}
-		return false
-	case 3: // Middle left
-		//456
-		if state[4].getValue() == player && state[5].getValue() == player {
-			return true
-		}
-		//147
-		if state[0].getValue() == player && state[6].getValue() == player {
-			return true
-		}
-		return false
-	case 4: //Middle middle
-		//456
-		if state[3].getValue() == player && state[5].getValue() == player {
-			return true
-		}
-		//258
-		if state[1].getValue() == player && state[7].getValue() == player {
-			return true
-		}
-		//159
-		if state[0].getValue() == player && state[8].getValue() == player {
-			return true
-		}
-		//357
-		if state[2].getValue() == player && state[6].getValue() == player {
-			return true
-		}
-		return false
-	case 5: //Middle right
-		//456
-		if state[3].getValue() == player && state[4].getValue() == player {
-			return true
-		}
-		//369
-		if state[2].getValue() == player && state[8].getValue() == player {
-			return true
-		}
-		return false
-	case 6: //Bottom left
-		//147
-		if state[0].getValue() == player && state[3].getValue() == player {
-			return true
-		}
-		//789
-		if state[7].getValue() == player && state[8].getValue() == player {
-			return true
-		}
-		//753
-		if state[4].getValue() == player && state[2].getValue() == player {
-			return true
-		}
-		return false
-	case 7: //Bottom middle
-		//789
-		if state[6].getValue() == player && state[8].getValue() == player {
-			return true
-		}
-		//852
-		if state[4].getValue() == player && state[1].getValue() == player {
-			return true
-		}
-		return false
-	case 8: //Bottom right
-		//369
-		if state[2].getValue() == player && state[5].getValue() == player {
-			return true
-		}
-		//789
-		if state[6].getValue() == player && state[7].getValue() == player {
-			return true
-		}
-		//159
-		if state[0].getValue() == player && state[4].getValue() == player {
-			return true
-		}
-		return false
-	default:
+func (b *Board) MakeMove(i int, player rune) bool {
+	if i < 0 || i >= len(b.State) || b.State[i] != 0 {
 		return false
 	}
+
+	b.State[i] = Cell(player)
+
+	return true
 }
 
-func (board *Board) HasEmptyCells() bool {
-	for _, cell := range board.BoardState {
-		if cell.getValue() != 'O' && cell.getValue() != 'X' {
+func (b *Board) HasWinner(index int, player rune) bool {
+	for i := 0; i < 3; i++ {
+		if b.checkRow(i) {
+			return true
+		}
+
+		if b.checkCol(i) {
+			return true
+		}
+	}
+
+	cells := b.State
+
+	if cells[0] != 0 && cells[0] == cells[4] && cells[0] == cells[8]  {
+		return true
+	}
+
+	if cells[2] != 0 && cells[2] == cells[6] && cells[2] == cells[6] {
+		return true
+	}
+
+	return false
+}
+
+func (b *Board) checkRow(i int) bool {
+	i *= 3
+	return b.State[i] != 0 && b.State[i] == b.State[i+1] && b.State[i] == b.State[i+2]
+}
+
+func (b *Board) checkCol(i int) bool {
+	return b.State[i] != 0 && b.State[i] == b.State[i+3] && b.State[i] == b.State[i+6]
+}
+
+func (b *Board) HasEmptyCells() bool {
+	for _, cell := range b.State {
+		if cell != 'O' && cell != 'X' {
 			return true
 		}
 	}
@@ -161,25 +68,22 @@ func (board *Board) printFiller() {
 	fmt.Println("|       |       |       |")
 }
 
-func (board *Board) PrintBoard() {
-	for i, c := range board.BoardState {
+func (b *Board) Print() {
+	for i, c := range b.State {
 		indexInRow := i % 3
+		if c == 0 {
+			c = Cell('0' + 1 + i)
+		}
 		switch indexInRow {
 		case 0:
-			board.printHeaderFooter()
-			board.printFiller()
-			fmt.Print("|")
-			c.printCell()
+			b.printHeaderFooter()
+			b.printFiller()
+			fmt.Printf("|   %c   ", c)
 		case 1:
-			fmt.Print("|")
-			c.printCell()
-			fmt.Print("|")
+			fmt.Printf("|   %c   |", c)
 		case 2:
-			c.printCell()
-			fmt.Print("|\n")
-			board.printFiller()
-
+			fmt.Printf("   %c   |\n", c)
+			b.printFiller()
 		}
 	}
-	board.printHeaderFooter()
-}
+	b.printHeaderFooter()}
