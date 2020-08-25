@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"TicTacGo/internal/board"
+	"github.com/Kwbmm/TicTacGo/board"
 )
 
 func main() {
