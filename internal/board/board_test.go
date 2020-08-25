@@ -7,64 +7,19 @@ import (
 )
 
 var emptyBoard = Board{
-	BoardState: [9]Cell{
-		Cell{Value: ' '},
-		Cell{Value: ' '},
-		Cell{Value: ' '},
-		Cell{Value: ' '},
-		Cell{Value: ' '},
-		Cell{Value: ' '},
-		Cell{Value: ' '},
-		Cell{Value: ' '},
-		Cell{Value: ' '}}}
+	State: [9]Cell{}}
 
 var partialBoard = Board{
-	BoardState: [9]Cell{
-		Cell{Value: ' '},
-		Cell{Value: 'O'},
-		Cell{Value: ' '},
-		Cell{Value: 'X'},
-		Cell{Value: 'X'},
-		Cell{Value: ' '},
-		Cell{Value: 'O'},
-		Cell{Value: ' '},
-		Cell{Value: ' '}}}
+	State: [9]Cell{' ', 'O', ' ', 'X', 'X', ' ', 'O', ' ', ' '}}
 
 var fullBoardNoWinner = Board{
-	BoardState: [9]Cell{
-		Cell{Value: 'O'},
-		Cell{Value: 'X'},
-		Cell{Value: 'O'},
-		Cell{Value: 'X'},
-		Cell{Value: 'X'},
-		Cell{Value: 'O'},
-		Cell{Value: 'X'},
-		Cell{Value: 'O'},
-		Cell{Value: 'X'}}}
+	State: [9]Cell{'O', 'X', 'O', 'X', 'X', 'O', 'X', 'O', 'X'}}
 
 var fullBoardWinnerIsO = Board{
-	BoardState: [9]Cell{
-		Cell{Value: 'X'},
-		Cell{Value: 'O'},
-		Cell{Value: 'O'},
-		Cell{Value: 'X'},
-		Cell{Value: 'O'},
-		Cell{Value: 'X'},
-		Cell{Value: 'O'},
-		Cell{Value: 'O'},
-		Cell{Value: 'X'}}}
+	State: [9]Cell{'X', 'O', 'O', 'X', 'O', 'X', 'O', 'O', 'X'}}
 
 var fullBoardWinnerIsX = Board{
-	BoardState: [9]Cell{
-		Cell{Value: 'O'},
-		Cell{Value: 'X'},
-		Cell{Value: 'X'},
-		Cell{Value: 'O'},
-		Cell{Value: 'X'},
-		Cell{Value: 'O'},
-		Cell{Value: 'X'},
-		Cell{Value: 'X'},
-		Cell{Value: 'O'}}}
+	State: [9]Cell{'O', 'X', 'X', 'O', 'X', 'O', 'X', 'X', 'O'}}
 
 func TestWhenBoardHasEmptyCellsShouldReturnTrue(t *testing.T) {
 	//Given
@@ -119,103 +74,32 @@ func TestWhenThereIsWinnerShouldReturnTrue(t *testing.T) {
 		} else {
 			nextPlayer = players[0]
 		}
+		npCell := Cell(nextPlayer)
+		pCell := Cell(player)
 		boards["123"] = make(map[rune]Board)
 		boards["123"][player] = Board{
-			BoardState: [9]Cell{
-				{Value: player},
-				{Value: player},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: nextPlayer}}}
+			State: [9]Cell{pCell, pCell, pCell, npCell, pCell, npCell, pCell, npCell, npCell}}
 		boards["147"] = make(map[rune]Board)
 		boards["147"][player] = Board{
-			BoardState: [9]Cell{
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player}}}
+			State: [9]Cell{pCell, npCell, npCell, pCell, pCell, npCell, pCell, npCell, pCell}}
 		boards["159"] = make(map[rune]Board)
 		boards["159"][player] = Board{
-			BoardState: [9]Cell{
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: player}}}
+			State: [9]Cell{pCell, npCell, npCell, npCell, pCell, npCell, npCell, npCell, pCell}}
 		boards["258"] = make(map[rune]Board)
 		boards["258"][player] = Board{
-			BoardState: [9]Cell{
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: player}}}
+			State: [9]Cell{npCell, pCell, npCell, pCell, pCell, npCell, npCell, pCell, pCell}}
 		boards["357"] = make(map[rune]Board)
 		boards["357"][player] = Board{
-			BoardState: [9]Cell{
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: nextPlayer}}}
+			State: [9]Cell{npCell, npCell, pCell, npCell, pCell, npCell, pCell, npCell, npCell}}
 		boards["369"] = make(map[rune]Board)
 		boards["369"][player] = Board{
-			BoardState: [9]Cell{
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: player}}}
+			State: [9]Cell{npCell, npCell, pCell, pCell, npCell, pCell, npCell, pCell, pCell}}
 		boards["456"] = make(map[rune]Board)
 		boards["456"][player] = Board{
-			BoardState: [9]Cell{
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: player},
-				{Value: player},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: nextPlayer}}}
+			State: [9]Cell{npCell, npCell, pCell, pCell, pCell, pCell, npCell, pCell, npCell}}
 		boards["789"] = make(map[rune]Board)
 		boards["789"][player] = Board{
-			BoardState: [9]Cell{
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: player},
-				{Value: nextPlayer},
-				{Value: nextPlayer},
-				{Value: player},
-				{Value: player},
-				{Value: player}}}
-		
+			State: [9]Cell{npCell, npCell, pCell, pCell, npCell, npCell, pCell, pCell, pCell}}
 	}
 
 	//Test + Verify
@@ -240,11 +124,11 @@ func TestWhenSettingEmptyCellShouldReturnTrue(t *testing.T) {
 	var board = partialBoard
 
 	//Test
-	result := board.SetCellValue(0, expectedPlayerSet)
-	playerSet := board.BoardState[0].getValue()
+	result := board.State[0].setValue(expectedPlayerSet)
+	playerSet := board.State[0]
 
 	//Verify
-	if result != expectedResult || playerSet != expectedPlayerSet {
+	if result != expectedResult || playerSet != Cell(expectedPlayerSet) {
 		t.Errorf("Expecting result = %t and player = %c\nGot result = %t and player = %c",
 			expectedResult, expectedPlayerSet,
 			result, playerSet)
@@ -258,11 +142,11 @@ func TestWhenSettingTakenCellShouldReturnFalse(t *testing.T) {
 	var board = partialBoard
 
 	//Test
-	result := board.SetCellValue(1, expectedPlayerSet)
-	playerSet := board.BoardState[1].getValue()
+	result := board.State[1].setValue(expectedPlayerSet)
+	playerSet := board.State[1]
 
 	//Verify
-	if result != expectedResult || playerSet != expectedPlayerSet {
+	if result != expectedResult || playerSet != Cell(expectedPlayerSet) {
 		t.Errorf("Expecting result = %t and player = %c\nGot result = %t and player = %c",
 			expectedResult, expectedPlayerSet,
 			result, playerSet)
