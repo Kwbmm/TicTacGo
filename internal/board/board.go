@@ -35,7 +35,7 @@ func (b *Board) HasWinner(index int, player rune) bool {
 		return true
 	}
 
-	if cells[2] != 0 && cells[2] == cells[6] && cells[2] == cells[6] {
+	if cells[2] != 0 && cells[2] == cells[4] && cells[2] == cells[6] {
 		return true
 	}
 
