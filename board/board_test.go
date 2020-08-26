@@ -104,14 +104,10 @@ func TestWhenThereIsWinnerShouldReturnTrue(t *testing.T) {
 
 	//Test + Verify
 	for key, playerBoards := range boards {
-		indexes := strings.Split(key, "")
 		for player, board := range playerBoards {
-			for _, index := range indexes {
-				i, _ := strconv.Atoi(index)
-				result := board.HasWinner(i-1, player)
-				if result != expectedResult {
-					t.Errorf("Expecting winner '%c' with sequence %s", player, key)
-				}
+			result, _ := board.HasWinner()
+			if result != expectedResult {
+				t.Errorf("Expecting winner '%c' with sequence %s", player, key)
 			}
 		}
 	}

@@ -18,28 +18,28 @@ func (b *Board) MakeMove(i int, player rune) bool {
 	return true
 }
 
-func (b *Board) HasWinner(index int, player rune) bool {
+func (b *Board) HasWinner() (bool, Cell) {
+	cells := b.State
 	for i := 0; i < 3; i++ {
 		if b.checkRow(i) {
-			return true
+			return true, cells[i]
 		}
 
 		if b.checkCol(i) {
-			return true
+			return true, cells[i]
 		}
 	}
 
-	cells := b.State
 
 	if cells[0] != 0 && cells[0] == cells[4] && cells[0] == cells[8]  {
-		return true
+		return true, cells[0]
 	}
 
 	if cells[2] != 0 && cells[2] == cells[4] && cells[2] == cells[6] {
-		return true
+		return true, cells[2]
 	}
 
-	return false
+	return false, Cell(0)
 }
 
 func (b *Board) checkRow(i int) bool {
@@ -58,6 +58,18 @@ func (b *Board) HasEmptyCells() bool {
 		}
 	}
 	return false
+}
+
+func (b Board) GetEmptyCells() []int {
+	var empties []int
+
+	for index, cell := range b.State {
+		if cell == 0 {
+			empties = append(empties, index)
+		}
+	}
+
+	return empties
 }
 
 func (board *Board) printHeaderFooter() {
